@@ -30,4 +30,74 @@
             <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
         </section>
     </div>
+
+    <div class="row">
+        <section class="col-md-12" aria-labelledby="sessionButtonsTitle">
+            <h2 id="sessionButtonsTitle">Session Actions</h2>
+            <button id="getSessionCounterDefault" class="btn btn-primary">Get Session Counter (Default)</button>
+            <button id="incrementSessionCounterDefault" class="btn btn-primary">Increment Session Counter (Default)</button>
+            <button id="getSessionCounterRequired" class="btn btn-primary">Get Session Counter (Required)</button>
+            <button id="incrementSessionCounterRequired" class="btn btn-primary">Increment Session Counter (Required)</button>
+            <button id="getSessionCounterReadOnly" class="btn btn-primary">Get Session Counter (ReadOnly)</button>
+            <button id="incrementSessionCounterReadOnly" class="btn btn-primary">Increment Session Counter (ReadOnly)</button>
+            <button id="getSessionCounterDisabled" class="btn btn-primary">Get Session Counter (Disabled)</button>
+            <button id="incrementSessionCounterDisabled" class="btn btn-primary">Increment Session Counter (Disabled)</button>
+        </section>
+    </div>
 </main>
+
+@section Scripts {
+    <script>
+    async function callControllerAction(url) {
+        try {
+            let requests = [];
+            for (let i = 0; i < 5; i++) {
+                requests.push(fetch(url));
+            }
+            let responses = await Promise.all(requests);
+            for (let response of responses) {
+                if (response.ok) {
+                    let data = await response.json();
+                    console.log(data);
+                } else {
+                    console.error('HTTP-Error: ' + response.status);
+                }
+            }
+        } catch (error) {
+            console.error('Fetch error: ', error);
+        }
+    }
+
+    document.getElementById('getSessionCounterDefault').addEventListener('click', () => {
+        callControllerAction('@Url.Action("GetSessionCounter", "DefaultSession")');
+    });
+
+    document.getElementById('incrementSessionCounterDefault').addEventListener('click', () => {
+        callControllerAction('@Url.Action("IncrementSessionCounter", "DefaultSession")');
+    });
+
+    document.getElementById('getSessionCounterRequired').addEventListener('click', () => {
+        callControllerAction('@Url.Action("GetSessionCounter", "RequiredSession")');
+    });
+
+    document.getElementById('incrementSessionCounterRequired').addEventListener('click', () => {
+        callControllerAction('@Url.Action("IncrementSessionCounter", "RequiredSession")');
+    });
+
+    document.getElementById('getSessionCounterReadOnly').addEventListener('click', () => {
+        callControllerAction('@Url.Action("GetSessionCounter", "ReadOnlySession")');
+    });
+
+    document.getElementById('incrementSessionCounterReadOnly').addEventListener('click', () => {
+        callControllerAction('@Url.Action("IncrementSessionCounter", "ReadOnlySession")');
+    });
+
+    document.getElementById('getSessionCounterDisabled').addEventListener('click', () => {
+        callControllerAction('@Url.Action("GetSessionCounter", "DisabledSession")');
+    });
+
+    document.getElementById('incrementSessionCounterDisabled').addEventListener('click', () => {
+        callControllerAction('@Url.Action("IncrementSessionCounter", "DisabledSession")');
+    });
+    </script>
+}
